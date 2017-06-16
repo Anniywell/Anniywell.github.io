@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://anniywell.github.io/"/>
-  <updated>2017-06-16T10:13:34.007Z</updated>
+  <updated>2017-06-16T10:19:59.113Z</updated>
   <id>https://anniywell.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://anniywell.github.io/2017/06/16/%E6%B5%85%E6%9E%90Python%E5%85%83%E7%B1%BB%E5%8F%8A%E5%BA%94%E7%94%A8/"/>
     <id>https://anniywell.github.io/2017/06/16/浅析Python元类及应用/</id>
     <published>2017-06-16T07:28:36.000Z</published>
-    <updated>2017-06-16T10:13:34.007Z</updated>
+    <updated>2017-06-16T10:19:59.113Z</updated>
     
     <content type="html"><![CDATA[<h2 id="写这篇文章的缘由"><a href="#写这篇文章的缘由" class="headerlink" title="写这篇文章的缘由"></a>写这篇文章的缘由</h2><p>前几天去一家公司面试，面试的岗位是Python后台开发，面试中被问到了一道题，考虑很久想不到答案，顾回来查阅资料在此总结一下。<br>题目的描述是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SQLAlchemy中Model中定义类成员时，如何做到声明顺序与数据库表的列顺序一致</div><div class="line">提示：普通类成员是存储在__dict__，而dict本身是无序的</div></pre></td></tr></table></figure></p>
 <p>通过阅读SQLAlchemy源码得知，其内部实现是使用元类编程来完成的，元类编程是Python的一种高级黑暗魔法，经常听其大名，并没有进入深入了解，借此机会稍微总结一下。</p>
@@ -32,7 +32,7 @@
 <li>eval</li>
 <li>元类</li>
 </ul>
-<p>上面的几种方式相对于元类来说简单一些，这里暂时先不讲了，以后有时间再去补充</p>
+<p>上面的几种方式相对于元类来说简单一些，这里暂时先不讲了，以后有时间再去补充<br><a id="more"></a></p>
 <h2 id="元类"><a href="#元类" class="headerlink" title="元类"></a>元类</h2><h3 id="类也是对象"><a href="#类也是对象" class="headerlink" title="类也是对象"></a>类也是对象</h3><p>在Python中一切皆对象，同样“类”也是对象<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">OneClass</span>:</span></div><div class="line"><span class="meta">... </span>    <span class="keyword">pass</span></div><div class="line">...</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>OneClass</div><div class="line">&lt;<span class="class"><span class="keyword">class</span> '<span class="title">__main__</span>.<span class="title">OneClass</span>'&gt;</span></div></pre></td></tr></table></figure></p>
 <p>当你在定义一个class时，会在内存中一个对象，对象的名字就是类的名字。<br><strong>这个对象（类）自身拥有创建对象（类实例）的能力，而这就是为什么它是一个类的原因</strong></p>
 <h3 id="动态的创建类"><a href="#动态的创建类" class="headerlink" title="动态的创建类"></a>动态的创建类</h3><p>最简单的动态创建方式是将类的定义写在逻辑判断中，不同条件生成不同的类，但这还不够动态，你仍然需要自己去编写整个类的代码。如果想要更动态的创建方式，那我们先来了解一个Python的内建函数<strong>type</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class type(object):  # 当传入一个参数时，返回该对象的类型</div><div class="line">class type(name, bases, dict)   # 创建新类型，name-类名，bases-父类元组，dict-属性字典</div></pre></td></tr></table></figure></p>
@@ -42,11 +42,22 @@
 <p>回归开篇的那道题目，实现大致是这样的：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderedClass</span><span class="params">(type)</span>:</span></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__prepare__</span><span class="params">(mcs, name, bases)</span>:</span></div><div class="line">        <span class="keyword">return</span> OrderedDict()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(cls, name, bases, classdict)</span>:</span></div><div class="line">        result = type.__new__(cls, name, bases, dict(classdict))</div><div class="line">        result.__fields__ = list(classdict.keys())</div><div class="line">        <span class="keyword">return</span> result</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Column</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(metaclass=OrderedClass)</span>:</span></div><div class="line">    mycol2 = Column()</div><div class="line">    mycol3 = Column()</div><div class="line">    zut = Column()</div><div class="line">    cool = Column()</div><div class="line">    menfin = Column()</div><div class="line">    a = Column()</div><div class="line"></div><div class="line"></div><div class="line">print(MyClass.__fields__)</div></pre></td></tr></table></figure></p>
 <p>在元类中使用<strong>prepare</strong>返回有序字典来存储类成员定义，在元类中创建类，并将有序的属性名赋值给类的<strong>fields</strong>，通过访问<strong>fields</strong>得到与定义顺序相同的属性名称。<br>想了解更多可以看一下<a href="https://www.python.org/dev/peps/pep-3115/" target="_blank" rel="external">PEP 3115 – Metaclasses in Python 3000</a><br>另外，关于类属性定义顺序问题，在Python3.6已经改成默认有序了，详情参考<a href="https://www.python.org/dev/peps/pep-0520/" target="_blank" rel="external">PEP 520 – Preserving Class Attribute Definition Order</a></p>
 <h2 id="究竟为什么要使用元类？"><a href="#究竟为什么要使用元类？" class="headerlink" title="究竟为什么要使用元类？"></a>究竟为什么要使用元类？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">“元类就是深度的魔法，99%的用户应该根本不必为此操心。如果你想搞清楚究竟是否需要用到元类，那么你就不需要它。那些实际用到元类的人都非常清楚地知道他们需要做什么，而且根本不需要解释为什么要用元类。”  —— Python界的领袖 Tim Peters</div></pre></td></tr></table></figure>
+<p>元类的主要用途是创建API，一个典型的应用就是数据库的ORM，通过一个class来映射成一张table，通过一个对象来映射成一行数据，将原本复杂的代码变的很简介，这些很多都是元类的功劳。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;写这篇文章的缘由&quot;&gt;&lt;a href=&quot;#写这篇文章的缘由&quot; class=&quot;headerlink&quot; title=&quot;写这篇文章的缘由&quot;&gt;&lt;/a&gt;写这篇文章的缘由&lt;/h2&gt;&lt;p&gt;前几天去一家公司面试，面试的岗位是Python后台开发，面试中被问到了一道题，考虑很久想不到
+      &lt;h2 id=&quot;写这篇文章的缘由&quot;&gt;&lt;a href=&quot;#写这篇文章的缘由&quot; class=&quot;headerlink&quot; title=&quot;写这篇文章的缘由&quot;&gt;&lt;/a&gt;写这篇文章的缘由&lt;/h2&gt;&lt;p&gt;前几天去一家公司面试，面试的岗位是Python后台开发，面试中被问到了一道题，考虑很久想不到答案，顾回来查阅资料在此总结一下。&lt;br&gt;题目的描述是这样的：&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;SQLAlchemy中Model中定义类成员时，如何做到声明顺序与数据库表的列顺序一致&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;提示：普通类成员是存储在__dict__，而dict本身是无序的&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;通过阅读SQLAlchemy源码得知，其内部实现是使用元类编程来完成的，元类编程是Python的一种高级黑暗魔法，经常听其大名，并没有进入深入了解，借此机会稍微总结一下。&lt;/p&gt;
+&lt;h2 id=&quot;元编程&quot;&gt;&lt;a href=&quot;#元编程&quot; class=&quot;headerlink&quot; title=&quot;元编程&quot;&gt;&lt;/a&gt;元编程&lt;/h2&gt;&lt;p&gt;元编程我个人理解是：&lt;strong&gt;用代码生成（操纵）代码&lt;/strong&gt;的编程手法。&lt;br&gt;Python中元编程的几种手段：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;预定义方法&lt;/li&gt;
+&lt;li&gt;函数赋值&lt;/li&gt;
+&lt;li&gt;descriptor&lt;/li&gt;
+&lt;li&gt;eval&lt;/li&gt;
+&lt;li&gt;元类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面的几种方式相对于元类来说简单一些，这里暂时先不讲了，以后有时间再去补充&lt;br&gt;
     
     </summary>
     
