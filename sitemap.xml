@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://anniywell.github.io/2017/06/23/Windows%E8%BD%AF%E4%BB%B6%E6%B8%85%E5%8D%95/</loc>
+    
+    <lastmod>2017-06-23T06:50:47.148Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://anniywell.github.io/2017/06/23/Python%E5%8D%8F%E7%A8%8B/</loc>
+    
+    <lastmod>2017-06-23T06:50:32.549Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://anniywell.github.io/2017/06/16/%E6%B5%85%E6%9E%90Python%E5%85%83%E7%B1%BB%E5%8F%8A%E5%BA%94%E7%94%A8/</loc>
     
     <lastmod>2017-06-16T10:19:59.113Z</lastmod>
@@ -37,14 +51,14 @@
   </url>
   
   <url>
-    <loc>https://anniywell.github.io/tags/index.html</loc>
+    <loc>https://anniywell.github.io/categories/index.html</loc>
     
     <lastmod>2017-06-16T00:38:45.178Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://anniywell.github.io/categories/index.html</loc>
+    <loc>https://anniywell.github.io/tags/index.html</loc>
     
     <lastmod>2017-06-16T00:38:45.178Z</lastmod>
     

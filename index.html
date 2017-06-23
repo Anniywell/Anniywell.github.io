@@ -204,6 +204,107 @@
     <header class="post-header">
       <h1 class="post-title">
         
+          <a class="post-link" href="/2017/06/23/Windows软件清单/">Windows软件清单</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017年6月23日
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+          
+        
+
+        
+          <h2 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h2><h3 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a>浏览器</h3><p><a href="https://www.mozilla.org/en-US/firefox/all/" target="_blank" rel="external">Firefox国际版</a><br><a href="https://www.google.cn/chrome/browser/desktop/index.html" target="_blank" rel="external">Chrome</a><br><a href="https://vivaldi.com/download/" target="_blank" rel="external">Vivaldi</a></p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a href="">迅雷极速版</a></p>
+<h3 id="压缩归档"><a href="#压缩归档" class="headerlink" title="压缩归档"></a>压缩归档</h3><p><a href="http://www.7-zip.org/" target="_blank" rel="external">7-Zip</a></p>
+<h3 id="编辑阅读"><a href="#编辑阅读" class="headerlink" title="编辑阅读"></a>编辑阅读</h3><p><a href="http://ep.wps.cn/product/wps-office-download.html" target="_blank" rel="external">WPS专业增强版</a><br><a href="https://www.sumatrapdfreader.org/download-free-pdf-viewer.html" target="_blank" rel="external">SumatraPDF</a></p>
+          <div class="read-more">
+            <a href="/2017/06/23/Windows软件清单/" class="read-more-link">阅读更多</a>
+          </div>
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2017/06/23/Python协程/">Python协程</a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017年6月23日
+        </span>
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        
+        
+          
+        
+
+        
+          <h2 id="协程简介"><a href="#协程简介" class="headerlink" title="协程简介"></a>协程简介</h2><p>协程，即协作式程序，又称微线程、纤程，英文名Coroutine。</p>
+<p>其思想是，一系列互相依赖的协程间依次使用CPU，每次只有一个协程工作，而其他协程处于休眠状态。协程可以在运行期间的某个点上暂停执行，并在恢复运行时从暂停的点上继续执行。<br>协程已经被证明是一种非常有用的程序组件，不仅被python、lua、ruby等脚本语言广泛采用，而且被新一代面向多核的编程语言如golang rust-lang等采用作为并发的基本单位。<br>协程可以被认为是一种用户空间线程，与传统的线程相比，有2个主要的优点：</p>
+<ul>
+<li>与线程不同，协程是自己主动让出CPU，并交付他期望的下一个协程运行，而不是在任何时候都有可能被系统调度打断。因此协程的使用更加清晰易懂，并且多数情况下不需要锁机制。</li>
+<li>与线程相比，协程的切换由程序控制，发生在用户空间而非内核空间，因此切换的代价非常小。</li>
+</ul>
+<p>总结起来是一句话：协程可以认为是一种用户态线程，与系统提供的线程不同点是，它需要主动让出CPU时间，而不是由系统进行调度，即控制权在程序员手上。</p>
+<h2 id="Python协程史"><a href="#Python协程史" class="headerlink" title="Python协程史"></a>Python协程史</h2><ul>
+<li>Python 2.2 中的生成器让代码执行过程可以暂停 (yield)</li>
+<li>Python 2.5 中可以将值返回给暂停的生成器，这使得 Python 中协程的概念成为可能 (send)</li>
+<li>Python 3.3 中的 yield from，使得重构生成器与将它们串联起来都很简单 (yield from)</li>
+<li>Python 3.4 以后通过标准库 asyncio 获得了事件循环的特性 (asyncio)</li>
+<li>Python 3.5 使用async/await语法引入对协程的显式支持 (async/await)</li>
+<li>Python 3.6 增强asyncio，支持异步生成器、异步解析式</li>
+</ul>
+          <div class="read-more">
+            <a href="/2017/06/23/Python协程/" class="read-more-link">阅读更多</a>
+          </div>
+        
+      
+    </div>
+
+    
+
+    
+
+  </article>
+
+    
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
           <a class="post-link" href="/2017/06/16/浅析Python元类及应用/">浅析Python元类及应用</a>
         
       </h1>
